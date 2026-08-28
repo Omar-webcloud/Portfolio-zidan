@@ -1,0 +1,112 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Space Grotesk', 'Space Grotesk Fallback', sans-serif;
+  --font-serif: 'Instrument Serif', 'Instrument Serif Fallback', serif;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: light;
+  --background: oklch(0.985 0.001 90);
+  --foreground: oklch(0.16 0.005 270);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.16 0.005 270);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0.005 270);
+  --primary: oklch(0.19 0.005 270);
+  --primary-foreground: oklch(0.985 0.001 90);
+  --secondary: oklch(0.955 0.002 90);
+  --secondary-foreground: oklch(0.19 0.005 270);
+  --muted: oklch(0.955 0.002 90);
+  --muted-foreground: oklch(0.5 0.01 270);
+  --accent: oklch(0.51 0.23 275);
+  --accent-foreground: oklch(0.985 0.001 90);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.91 0.002 90);
+  --input: oklch(0.91 0.002 90);
+  --ring: oklch(0.51 0.23 275);
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .hero-gradient {
+    background:
+      radial-gradient(ellipse 55% 60% at 18% 25%, oklch(0.93 0.035 255 / 0.8), transparent 65%),
+      radial-gradient(ellipse 50% 55% at 82% 20%, oklch(0.94 0.03 75 / 0.75), transparent 65%),
+      radial-gradient(ellipse 60% 50% at 55% 70%, oklch(0.94 0.03 300 / 0.6), transparent 65%);
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .img-reveal {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .img-reveal.is-visible {
+    clip-path: inset(0 0 0% 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .img-reveal {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
