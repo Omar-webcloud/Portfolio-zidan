@@ -40,11 +40,12 @@ export function SiteNav() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-8">
         <a href="#home" className="flex items-center gap-3" aria-label="Zidan Sharma — home">
           <Image
-            src="/images/zidan-portrait.png"
+            src="/images/zidan-portrait.jpg"
             alt=""
             width={40}
             height={40}
             className="size-10 rounded-full border border-border object-cover"
+            unoptimized
           />
           <span className="font-serif text-2xl italic tracking-tight">Zidan Sharma</span>
         </a>

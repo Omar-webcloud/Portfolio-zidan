@@ -27,13 +27,14 @@ export function Skills() {
     <section className="mx-auto max-w-7xl px-4 py-24 md:px-8 md:py-32">
       <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
         <Reveal variant="image" className="lg:col-span-2">
-          <figure className="overflow-hidden rounded-3xl">
+          <figure className="relative aspect-[5/6] overflow-hidden rounded-3xl">
             <Image
-              src="/images/zidan-portrait.png"
+              src="/images/zidan-portrait.jpg"
               alt="Zidan Sharma in the studio"
-              width={640}
-              height={780}
-              className="h-full w-full object-cover"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+              unoptimized
             />
           </figure>
         </Reveal>

@@ -24,13 +24,14 @@ export function About() {
 
       <div className="mt-14 grid gap-10 lg:grid-cols-2 lg:gap-16">
         <Reveal variant="image">
-          <figure className="relative overflow-hidden rounded-3xl">
+          <figure className="relative aspect-[5/6] overflow-hidden rounded-3xl">
             <Image
-              src="/images/zidan-portrait.png"
+              src="/images/zidan-portrait.jpg"
               alt="Editorial portrait of Zidan Sharma"
-              width={720}
-              height={860}
-              className="h-full w-full object-cover"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+              unoptimized
             />
             <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-6 pt-16">
               <p className="text-2xl font-bold text-white">Zidan Sharma</p>
