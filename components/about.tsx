@@ -9,7 +9,15 @@ const highlights = [
   { icon: Megaphone, label: 'Brand Communication' },
 ]
 
-export function About() {
+export function About({ profile }: { profile: any }) {
+  // Ensure we only use the profile image if it's a valid string, otherwise strictly use the local image
+  const profileImg = (profile?.profileImage && profile.profileImage.trim() !== "" && profile.profileImage !== "null") 
+    ? profile.profileImage 
+    : "/images/zidan-portrait.jpg";
+
+  const name = profile?.name?.trim() ? profile.name : "Zidan Sharma";
+  const role = profile?.role?.trim() ? profile.role : "Visualizer / Visual Designer";
+
   return (
     <section id="about" className="mx-auto max-w-7xl px-4 py-24 md:px-8 md:py-32">
       <Reveal>
@@ -23,19 +31,19 @@ export function About() {
       </Reveal>
 
       <div className="mt-14 grid gap-10 lg:grid-cols-2 lg:gap-16">
-        <Reveal variant="image">
-          <figure className="relative aspect-[5/6] overflow-hidden rounded-3xl">
+        <Reveal>
+          <figure className="relative aspect-[5/6] overflow-hidden rounded-3xl bg-neutral-900">
             <Image
-              src="/images/zidan-portrait.jpg"
-              alt="Editorial portrait of Zidan Sharma"
+              src={profileImg}
+              alt={`Editorial portrait of ${name}`}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
               unoptimized
             />
             <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-6 pt-16">
-              <p className="text-2xl font-bold text-white">Zidan Sharma</p>
-              <p className="text-sm text-white/80">Visualizer / Visual Designer</p>
+              <p className="text-2xl font-bold text-white">{name}</p>
+              <p className="text-sm text-white/80">{role}</p>
             </figcaption>
           </figure>
         </Reveal>
@@ -43,12 +51,11 @@ export function About() {
         <div className="flex flex-col justify-center gap-8">
           <Reveal delay={100}>
             <p className="text-pretty text-xl leading-relaxed md:text-2xl">
-              I&apos;m Zidan Sharma, a Visualizer focused on turning ideas into visuals that communicate, connect and
+              I&apos;m {profile?.name?.split(' ')[0] || 'Zidan'}, a {profile?.role || 'Visualizer'} focused on turning ideas into visuals that communicate, connect and
               leave an impression.
             </p>
-            <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
-              My work combines composition, storytelling, design thinking and visual experimentation to create work
-              that feels intentional and memorable.
+            <p className="mt-4 text-pretty leading-relaxed text-muted-foreground whitespace-pre-wrap">
+              {profile?.aboutText || 'My work combines composition, storytelling, design thinking and visual experimentation to create work that feels intentional and memorable.'}
             </p>
           </Reveal>
 

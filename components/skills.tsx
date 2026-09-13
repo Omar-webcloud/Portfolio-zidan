@@ -25,14 +25,14 @@ const tools = [
 export function Skills() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-24 md:px-8 md:py-32">
-      <div className="grid gap-12 lg:grid-cols-5 lg:gap-16">
-        <Reveal variant="image" className="lg:col-span-2">
+      <div className="mt-14 grid gap-12 lg:grid-cols-5 lg:gap-16">
+        <Reveal className="lg:col-span-2">
           <figure className="relative aspect-[5/6] overflow-hidden rounded-3xl">
             <Image
-              src="/images/zidan-portrait.jpg"
-              alt="Zidan Sharma in the studio"
+              src="/images/work-digital.png"
+              alt="Digital interface design work"
               fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
+              sizes="(max-width: 1024px) 100vw, 40vw"
               className="object-cover"
               unoptimized
             />

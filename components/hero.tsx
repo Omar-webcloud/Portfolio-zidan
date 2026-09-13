@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
 import { Reveal } from '@/components/reveal'
 
-export function Hero() {
+export function Hero({ profile }: { profile: any }) {
   return (
     <section id="home" className="hero-gradient relative overflow-hidden pb-24 pt-36 md:pb-32 md:pt-44">
       <div className="mx-auto max-w-6xl px-4 text-center md:px-8">
@@ -23,9 +23,8 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={200}>
-          <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-            I create striking visuals, compositions and creative experiences that help brands, campaigns and ideas
-            stand out.
+          <p className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg whitespace-pre-wrap">
+            {profile?.bio || 'I create striking visuals, compositions and creative experiences that help brands, campaigns and ideas stand out.'}
           </p>
         </Reveal>
 
@@ -50,8 +49,12 @@ export function Hero() {
         <Reveal delay={360}>
           <div className="mt-10 flex items-center justify-center gap-3">
             <Image
-              src="/images/zidan-portrait.jpg"
-              alt="Portrait of Zidan Sharma"
+              src={(profile?.heroImage && profile.heroImage.trim() !== "" && profile.heroImage !== "null") 
+                ? profile.heroImage 
+                : (profile?.profileImage && profile.profileImage.trim() !== "" && profile.profileImage !== "null")
+                  ? profile.profileImage
+                  : "/images/zidan-portrait.jpg"}
+              alt={`Portrait of ${profile?.name?.trim() ? profile.name : 'Zidan Sharma'}`}
               width={48}
               height={48}
               className="size-12 rounded-full border-2 border-card object-cover shadow-md"

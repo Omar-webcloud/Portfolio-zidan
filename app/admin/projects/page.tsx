@@ -57,25 +57,37 @@ export default function ProjectsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (isEditing && isEditing !== "new") {
-      await fetch("/api/projects", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: isEditing, ...formData })
+    try {
+      let res;
+      if (isEditing && isEditing !== "new") {
+        res = await fetch("/api/projects", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: isEditing, ...formData })
+        })
+      } else {
+        res = await fetch("/api/projects", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData)
+        })
+      }
+      
+      const data = await res.json()
+      if (!res.ok) {
+        alert("Failed to save project: " + (data.error || "Unknown error"))
+        return
+      }
+
+      setIsEditing(null)
+      setFormData({
+        title: "", description: "", imageUrl: "", link: "", repoUrl: "", tags: [], order: 0
       })
-    } else {
-      await fetch("/api/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
-      })
+      fetchProjects()
+    } catch (err) {
+      alert("Network error. Check console.")
+      console.error(err)
     }
-    
-    setIsEditing(null)
-    setFormData({
-      title: "", description: "", imageUrl: "", link: "", repoUrl: "", tags: [], order: 0
-    })
-    fetchProjects()
   }
 
   const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {

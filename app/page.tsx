@@ -9,16 +9,33 @@ import { Testimonials } from '@/components/testimonials'
 import { Skills } from '@/components/skills'
 import { ContactCta } from '@/components/contact-cta'
 import { SiteFooter } from '@/components/site-footer'
+import prisma from '@/lib/prisma'
 
-export default function Page() {
+export default async function Page() {
+  const dbProjects = await prisma.project.findMany({ orderBy: { order: 'asc' } })
+  const profile = await prisma.profile.findFirst()
+  
+  // Map database projects to the UI Project format
+  const mappedProjects = dbProjects.map(p => ({
+    slug: p.id,
+    title: p.title,
+    tagline: p.tags[0] || 'PROJECT',
+    category: p.tags[0] || 'Other',
+    description: p.description,
+    role: 'Creator',
+    year: new Date(p.createdAt).getFullYear().toString(),
+    approach: p.link || 'No link provided',
+    image: p.imageUrl || '/placeholder.svg'
+  }))
+
   return (
     <>
       <SiteNav />
       <main>
-        <Hero />
-        <About />
+        <Hero profile={profile} />
+        <About profile={profile} />
         <Services />
-        <Work />
+        <Work initialProjects={mappedProjects} />
         <Stats />
         <Process />
         <Testimonials />
