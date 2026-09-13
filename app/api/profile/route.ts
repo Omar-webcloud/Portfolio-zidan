@@ -32,7 +32,12 @@ export async function POST(request: Request) {
           bio: data.bio,
           profileImage: data.profileImage,
           heroImage: data.heroImage,
-          aboutText: data.aboutText
+          aboutText: data.aboutText,
+          email: data.email,
+          linkedin: data.linkedin,
+          instagram: data.instagram,
+          dribbble: data.dribbble,
+          behance: data.behance,
         }
       })
     } else {
@@ -43,7 +48,12 @@ export async function POST(request: Request) {
           bio: data.bio,
           profileImage: data.profileImage,
           heroImage: data.heroImage,
-          aboutText: data.aboutText
+          aboutText: data.aboutText,
+          email: data.email,
+          linkedin: data.linkedin,
+          instagram: data.instagram,
+          dribbble: data.dribbble,
+          behance: data.behance,
         }
       })
     }

@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Reveal } from '@/components/reveal'
+import { useRouter } from 'next/navigation'
 
 export type Project = {
   slug: string
@@ -31,8 +32,8 @@ const CARD_H = 440
 
 /* ─── Coverflow Component ────────────────────────────────────────── */
 function Coverflow({ items }: { items: Project[] }) {
+  const router = useRouter()
   const [active, setActive]     = useState(0)
-  const [selected, setSelected] = useState<Project | null>(null)
   const startX = useRef(0)
   const moved  = useRef(false)
   const count  = items.length
@@ -46,7 +47,6 @@ function Coverflow({ items }: { items: Project[] }) {
   /* keyboard nav */
   useEffect(() => {
     const fn = (e: KeyboardEvent) => {
-      if (selected) return
       if (e.key === 'ArrowLeft')  prev()
       if (e.key === 'ArrowRight') next()
     }
@@ -63,16 +63,6 @@ function Coverflow({ items }: { items: Project[] }) {
     if (d < -40) next()
     else if (d > 40) prev()
   }
-
-  /* modal lock */
-  const closeModal = useCallback(() => setSelected(null), [])
-  useEffect(() => {
-    if (!selected) return
-    const fn = (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal() }
-    document.addEventListener('keydown', fn)
-    document.body.style.overflow = 'hidden'
-    return () => { document.removeEventListener('keydown', fn); document.body.style.overflow = '' }
-  }, [selected, closeModal])
 
   if (count === 0) {
     return <p className="py-20 text-center text-muted-foreground">No projects in this category.</p>
@@ -124,12 +114,12 @@ function Coverflow({ items }: { items: Project[] }) {
               onClick={() => {
                 if (moved.current) return
                 if (!isActive) setActive(idx)
-                else           setSelected(project)
+                else           router.push(`/work/${project.slug}`)
               }}
               onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   if (!isActive) setActive(idx)
-                  else           setSelected(project)
+                  else           router.push(`/work/${project.slug}`)
                 }
               }}
               style={{
@@ -268,72 +258,6 @@ function Coverflow({ items }: { items: Project[] }) {
           <ChevronRight className="size-5" />
         </button>
       </div>
-
-      {/* ── Case-study modal ── */}
-      {selected && (
-        <div
-          className="fixed inset-0 z-[60] flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center p-4 sm:p-6"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${selected.title} case study`}
-          onClick={closeModal}
-        >
-          <div
-            className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-3xl bg-card"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="relative">
-              <Image
-                src={selected.image || '/placeholder.svg'}
-                alt={`${selected.title} large visual`}
-                width={1200}
-                height={800}
-                className="max-h-[35vh] sm:max-h-[45vh] w-full object-cover"
-              />
-              <button
-                type="button"
-                onClick={closeModal}
-                className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-card/90 backdrop-blur transition-colors hover:bg-card shadow-sm"
-                aria-label="Close case study"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-            <div className="p-6 md:p-10">
-              <p className="text-xs font-medium uppercase tracking-widest text-accent">
-                {selected.category}
-              </p>
-              <h3 className="mt-2 text-2xl font-bold sm:text-3xl md:text-4xl break-words">{selected.title}</h3>
-              <p className="mt-3 leading-relaxed text-muted-foreground whitespace-pre-wrap">{selected.description}</p>
-              
-              <dl className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 border-y border-border py-5">
-                <div>
-                  <dt className="text-xs uppercase tracking-widest text-muted-foreground">Role</dt>
-                  <dd className="mt-1 font-medium break-words">{selected.role}</dd>
-                </div>
-                <div>
-                  <dt className="text-xs uppercase tracking-widest text-muted-foreground">Year</dt>
-                  <dd className="mt-1 font-medium">{selected.year}</dd>
-                </div>
-              </dl>
-              
-              {selected.approach && selected.approach !== 'No link provided' && (
-                <>
-                  <h4 className="mt-6 font-serif text-xl sm:text-2xl italic">Project Link</h4>
-                  <a 
-                    href={selected.approach.startsWith('http') ? selected.approach : `https://${selected.approach}`}
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-block leading-relaxed text-primary hover:underline break-all"
-                  >
-                    {selected.approach}
-                  </a>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

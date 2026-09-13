@@ -14,7 +14,12 @@ export default function ProfilePage() {
     bio: "",
     profileImage: "",
     heroImage: "",
-    aboutText: ""
+    aboutText: "",
+    email: "",
+    linkedin: "",
+    instagram: "",
+    dribbble: "",
+    behance: ""
   })
 
   useEffect(() => {
@@ -28,7 +33,12 @@ export default function ProfilePage() {
             bio: data.profile.bio || "",
             profileImage: data.profile.profileImage || "",
             heroImage: data.profile.heroImage || "",
-            aboutText: data.profile.aboutText || ""
+            aboutText: data.profile.aboutText || "",
+            email: data.profile.email || "",
+            linkedin: data.profile.linkedin || "",
+            instagram: data.profile.instagram || "",
+            dribbble: data.profile.dribbble || "",
+            behance: data.profile.behance || ""
           })
         }
         setLoading(false)
@@ -126,6 +136,61 @@ export default function ProfilePage() {
             <ImageUpload 
               value={formData.heroImage}
               onChange={(url) => setFormData({ ...formData, heroImage: url })}
+            />
+          </div>
+        </div>
+
+        <div className="bg-neutral-900 border border-neutral-800 p-6 rounded-xl space-y-4">
+          <h2 className="text-xl font-semibold mb-4 border-b border-neutral-800 pb-2">Contact & Socials</h2>
+          
+          <div>
+            <label className="block text-sm font-medium text-neutral-400 mb-1">Primary Email Address</label>
+            <input 
+              type="email" 
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-md p-3 text-white focus:outline-none focus:border-neutral-500"
+              value={formData.email}
+              placeholder="hello@example.com"
+              onChange={e => setFormData({ ...formData, email: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-neutral-400 mb-1">LinkedIn URL</label>
+            <input 
+              type="url" 
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-md p-3 text-white focus:outline-none focus:border-neutral-500"
+              value={formData.linkedin}
+              placeholder="https://linkedin.com/in/..."
+              onChange={e => setFormData({ ...formData, linkedin: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-neutral-400 mb-1">Instagram URL</label>
+            <input 
+              type="url" 
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-md p-3 text-white focus:outline-none focus:border-neutral-500"
+              value={formData.instagram}
+              placeholder="https://instagram.com/..."
+              onChange={e => setFormData({ ...formData, instagram: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-neutral-400 mb-1">Dribbble URL</label>
+            <input 
+              type="url" 
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-md p-3 text-white focus:outline-none focus:border-neutral-500"
+              value={formData.dribbble}
+              placeholder="https://dribbble.com/..."
+              onChange={e => setFormData({ ...formData, dribbble: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-neutral-400 mb-1">Behance URL</label>
+            <input 
+              type="url" 
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-md p-3 text-white focus:outline-none focus:border-neutral-500"
+              value={formData.behance}
+              placeholder="https://behance.net/..."
+              onChange={e => setFormData({ ...formData, behance: e.target.value })}
             />
           </div>
         </div>

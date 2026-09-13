@@ -40,9 +40,9 @@ export default async function Page() {
         <Process />
         <Testimonials />
         <Skills />
-        <ContactCta />
+        <ContactCta profile={profile} />
       </main>
-      <SiteFooter />
+      <SiteFooter profile={profile} />
     </>
   )
 }

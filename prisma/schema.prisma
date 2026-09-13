@@ -21,6 +21,11 @@ model Profile {
   profileImage String?
   heroImage    String?
   aboutText    String?
+  email        String?
+  linkedin     String?
+  instagram    String?
+  dribbble     String?
+  behance      String?
   updatedAt    DateTime @updatedAt
 }
 
