@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Reveal } from '@/components/reveal'
+import { useRouter } from 'next/navigation'
 
-/* ─── Types ──────────────────────────────────────────────────────── */
-type Project = {
+export type Project = {
   slug: string
   title: string
   tagline: string
@@ -17,90 +17,6 @@ type Project = {
   approach: string
   image: string
 }
-
-/* ─── Data ───────────────────────────────────────────────────────── */
-const projects: Project[] = [
-  {
-    slug: 'monochrome-identity',
-    title: 'Monochrome Identity',
-    tagline: 'IDENTITY SYSTEM',
-    category: 'Branding',
-    description:
-      'A restrained, tactile identity system built around type, texture and negative space.',
-    role: 'Visual Designer & Art Director',
-    year: '2026',
-    approach:
-      'Started from the brand voice rather than the logo — building a typographic system first, then letting the mark, stationery and collateral grow out of it. Every touchpoint was designed to feel physical and considered.',
-    image: '/images/work-branding.png',
-  },
-  {
-    slug: 'city-signal',
-    title: 'City Signal',
-    tagline: 'LARGE FORMAT',
-    category: 'Campaigns',
-    description:
-      'A large-format campaign key visual designed to command attention at street scale.',
-    role: 'Campaign Visualizer',
-    year: '2026',
-    approach:
-      'Explored dozens of compositional directions before landing on a single bold gradient statement that reads instantly from a distance. The visual language then scaled down into digital and social formats.',
-    image: '/images/work-campaign.png',
-  },
-  {
-    slug: 'soft-interface',
-    title: 'Soft Interface',
-    tagline: 'PRODUCT DESIGN',
-    category: 'Digital',
-    description:
-      'A digital product presentation exploring calm, editorial UI in a dimensional space.',
-    role: 'Visual Designer',
-    year: '2025',
-    approach:
-      'Treated the interface as an editorial object — staging it in a soft studio environment so the product feels premium before a single feature is explained.',
-    image: '/images/work-digital.png',
-  },
-  {
-    slug: 'formless-studies',
-    title: 'Formless Studies',
-    tagline: 'SCULPTURAL SERIES',
-    category: '3D',
-    description:
-      'An ongoing series of sculptural 3D explorations in glass, chrome and light.',
-    role: '3D Visualizer',
-    year: '2025',
-    approach:
-      'Personal experimentation with materials and light used as a sandbox for client work — testing how far abstraction can go while staying warm and inviting.',
-    image: '/images/work-3d.png',
-  },
-  {
-    slug: 'feed-theory',
-    title: 'Feed Theory',
-    tagline: 'VISUAL SYSTEM',
-    category: 'Social',
-    description:
-      'A social visual system designed for consistency and scroll-stopping contrast.',
-    role: 'Social Visual Designer',
-    year: '2026',
-    approach:
-      'Built a modular template system in a tight three-color palette so every post feels unmistakably on-brand while staying fast to produce.',
-    image: '/images/work-social.png',
-  },
-  {
-    slug: 'indigo-editorial',
-    title: 'Indigo Editorial',
-    tagline: 'ART DIRECTION',
-    category: 'Art Direction',
-    description:
-      'Editorial art direction pairing sculptural styling with a saturated single-color world.',
-    role: 'Art Director',
-    year: '2025',
-    approach:
-      'Directed the shoot around one rule: one color, one subject, maximum negative space. The constraint produced a series that feels both minimal and dramatic.',
-    image: '/images/work-artdirection.png',
-  },
-]
-
-const categories = ['All', 'Branding', 'Campaigns', 'Digital', '3D', 'Social', 'Art Direction']
 
 /* ─── Coverflow geometry ─────────────────────────────────────────── */
 // Each step away from center: tx = horizontal px, ry = rotateY deg, sc = scale, op = opacity
@@ -116,8 +32,8 @@ const CARD_H = 440
 
 /* ─── Coverflow Component ────────────────────────────────────────── */
 function Coverflow({ items }: { items: Project[] }) {
+  const router = useRouter()
   const [active, setActive]     = useState(0)
-  const [selected, setSelected] = useState<Project | null>(null)
   const startX = useRef(0)
   const moved  = useRef(false)
   const count  = items.length
@@ -131,7 +47,6 @@ function Coverflow({ items }: { items: Project[] }) {
   /* keyboard nav */
   useEffect(() => {
     const fn = (e: KeyboardEvent) => {
-      if (selected) return
       if (e.key === 'ArrowLeft')  prev()
       if (e.key === 'ArrowRight') next()
     }
@@ -148,16 +63,6 @@ function Coverflow({ items }: { items: Project[] }) {
     if (d < -40) next()
     else if (d > 40) prev()
   }
-
-  /* modal lock */
-  const closeModal = useCallback(() => setSelected(null), [])
-  useEffect(() => {
-    if (!selected) return
-    const fn = (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal() }
-    document.addEventListener('keydown', fn)
-    document.body.style.overflow = 'hidden'
-    return () => { document.removeEventListener('keydown', fn); document.body.style.overflow = '' }
-  }, [selected, closeModal])
 
   if (count === 0) {
     return <p className="py-20 text-center text-muted-foreground">No projects in this category.</p>
@@ -209,12 +114,12 @@ function Coverflow({ items }: { items: Project[] }) {
               onClick={() => {
                 if (moved.current) return
                 if (!isActive) setActive(idx)
-                else           setSelected(project)
+                else           router.push(`/work/${project.slug}`)
               }}
               onKeyDown={e => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   if (!isActive) setActive(idx)
-                  else           setSelected(project)
+                  else           router.push(`/work/${project.slug}`)
                 }
               }}
               style={{
@@ -353,67 +258,19 @@ function Coverflow({ items }: { items: Project[] }) {
           <ChevronRight className="size-5" />
         </button>
       </div>
-
-      {/* ── Case-study modal ── */}
-      {selected && (
-        <div
-          className="fixed inset-0 z-[60] flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center sm:p-6"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${selected.title} case study`}
-          onClick={closeModal}
-        >
-          <div
-            className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-t-3xl bg-card sm:rounded-3xl"
-            onClick={e => e.stopPropagation()}
-          >
-            <div className="relative">
-              <Image
-                src={selected.image || '/placeholder.svg'}
-                alt={`${selected.title} large visual`}
-                width={1200}
-                height={800}
-                className="max-h-[45vh] w-full object-cover"
-              />
-              <button
-                type="button"
-                onClick={closeModal}
-                className="absolute right-4 top-4 flex size-10 items-center justify-center rounded-full bg-card/90 backdrop-blur transition-colors hover:bg-card"
-                aria-label="Close case study"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-            <div className="p-6 md:p-10">
-              <p className="text-xs font-medium uppercase tracking-widest text-accent">
-                {selected.category}
-              </p>
-              <h3 className="mt-2 text-3xl font-bold md:text-4xl">{selected.title}</h3>
-              <p className="mt-3 leading-relaxed text-muted-foreground">{selected.description}</p>
-              <dl className="mt-6 grid grid-cols-2 gap-4 border-y border-border py-5">
-                <div>
-                  <dt className="text-xs uppercase tracking-widest text-muted-foreground">Role</dt>
-                  <dd className="mt-1 font-medium">{selected.role}</dd>
-                </div>
-                <div>
-                  <dt className="text-xs uppercase tracking-widest text-muted-foreground">Year</dt>
-                  <dd className="mt-1 font-medium">{selected.year}</dd>
-                </div>
-              </dl>
-              <h4 className="mt-6 font-serif text-2xl italic">Creative approach</h4>
-              <p className="mt-2 leading-relaxed text-muted-foreground">{selected.approach}</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
 
 /* ─── Section ────────────────────────────────────────────────────── */
-export function Work() {
+export function Work({ initialProjects = [] }: { initialProjects?: Project[] }) {
   const [filter, setFilter] = useState('All')
-  const visible = filter === 'All' ? projects : projects.filter(p => p.category === filter)
+  
+  // Extract unique categories from projects
+  const uniqueCategories = Array.from(new Set(initialProjects.map(p => p.category)))
+  const categories = ['All', ...uniqueCategories]
+
+  const visible = filter === 'All' ? initialProjects : initialProjects.filter(p => p.category === filter)
 
   return (
     <section id="work" className="mx-auto max-w-7xl px-4 py-24 md:px-8 md:py-32">
